@@ -1,0 +1,14 @@
+This is my collection of random useful stuff, mostly written in ruby.
+All code, unless otherwise stated in the source, is licenced under the
+GNU GPL (version 3 or later). Please see the file COPYING for the full
+licence.
+
+Current contents of this repository
+----------------------------------------------------------------------
+COPYING                        GNU GPL licence version 3
+README                         You're reading it...
+revolver.rb                    An implementation of a circular linked
+                               list (ruby)
+
+----------------------------------------------------------------------
+Lars Olsson (lasso@lassoweb.se)

@@ -1,18 +1,37 @@
+=begin
+
+Copyright (C) 2010 Lars Olsson (lasso@lassoweb.se)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=end
+
 module Lassoweb
 
-	module Collections
+  module Collections
 
-		# This class represents a circular double linked list.
-		class Revolver
+    # This class represents a circular double linked list.
+    class Revolver
 
-			Element = Struct.new(:next, :prev, :value) # :nodoc:
+      Element = Struct.new(:next, :prev, :value) # :nodoc:
 
-			include Enumerable
+      include Enumerable
 
-			# Creates a new circular list. If an array of initial elements are provided
-			# they are added to the initial list.
-			def initialize(initial_objs = [])
-				@endpoint = Element.new
+      # Creates a new circular list. If an array of initial elements are provided
+      # they are added to the initial list.
+      def initialize(initial_objs = [])
+        @endpoint = Element.new
 				@endpoint.next = @endpoint
 				@endpoint.prev = @endpoint
 				@endpoint.value = 0
@@ -22,9 +41,9 @@ module Lassoweb
 				end
 			end
 
-			# Adds a new element between the currently selected element and the next element.
-			# After this operation the currently selected element points to the newly inserted element.
-			def add(obj)
+      # Adds a new element between the currently selected element and the next element.
+      # After this operation the currently selected element points to the newly inserted element.
+      def add(obj)
         element = Element.new
         element.next = @current.next
         element.prev = @current
@@ -33,7 +52,7 @@ module Lassoweb
         @endpoint.prev = element if element.next == @endpoint
         @endpoint.value += 1
         @current = element
-			end
+      end
 
       # Removes all elements from the list
       def clear()
@@ -43,9 +62,9 @@ module Lassoweb
         end
       end
 
-			# Returns the value of the currently selected element. If the list is empty,
-			# nil is returned.
-			def current()
+      # Returns the value of the currently selected element. If the list is empty,
+      # nil is returned.
+      def current()
 				unless self.empty?
 					@current.value
 				else

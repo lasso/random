@@ -30,8 +30,20 @@ module Lassoweb
 
       # Class method that provides the same information as `gem list`
       def self.installed_gems()
-        Gem.source_index.collect do |spec|
-          "#{spec.last.name} (#{spec.last.version.version})"
+        # Create a hash that will return an empty array whenever a key is
+        # accessed for the first time
+        installed_gems = Hash.new { |hash, key| hash[key] = [] }
+        # Iterate over local gem specs
+        Gem.source_index.each do |spec|
+          # Add current spec to the list of installed gems
+          # If the spec represents a different version of a gem
+          # that has already been added, just add the version
+          installed_gems[spec.last.name].push(spec.last.version.version)
+        end
+        # Sort versions in descending order and join the name and version(s)
+        # of each spec. Finally, join all specs to a single string
+        installed_gems.collect do |gem|
+          "#{gem.first} (#{gem.last.sort() { |v1, v2| v2 <=> v1 }.join(', ')})"
         end.join($/)
       end
 

@@ -30,11 +30,9 @@ module Lassoweb
 
       # Class method that provides the same information as `gem list`
       def self.installed_gems()
-        gem_list = []
-        Gem.source_index.each do |spec|
-          gem_list << "#{spec.last.name} (#{spec.last.version.version})"
-        end
-        gem_list.join($/)
+        Gem.source_index.collect do |spec|
+          "#{spec.last.name} (#{spec.last.version.version})"
+        end.join($/)
       end
 
       # Class method that provides the same information as `ruby -v`

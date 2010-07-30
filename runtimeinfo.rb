@@ -38,12 +38,32 @@ module Lassoweb
           # Add current spec to the list of installed gems
           # If the spec represents a different version of a gem
           # that has already been added, just add the version
-          installed_gems[spec.last.name].push(spec.last.version.version)
+          installed_gems[spec.last.name].push(spec.last.version)
         end
         # Sort versions in descending order and join the name and version(s)
         # of each spec. Finally, join all specs to a single string
         installed_gems.collect do |gem|
-          "#{gem.first} (#{gem.last.sort() { |v1, v2| v2 <=> v1 }.join(', ')})"
+          "#{gem.first} (#{gem.last.sort { |v1, v2| v2 <=> v1 }.collect { |version| version.version }.join(', ')})"
+        end.join($/)
+      end
+
+      # Class method that provides the same information as `gem outdated`
+      def self.outdated_gems()
+        # Create an empty hash that will hold data on all outdated gems
+        outdated_gems = Hash.new
+        # Iterate over outdated gems
+        Gem.source_index.outdated.each do |gem|
+          # Get latest local spec for gem
+          latest_local_spec =
+            Gem.source_index.search(Gem::Dependency.new(gem)).max { |v1, v2| v1.version <=> v2.version}
+          # Get latest remote spec for gem
+          latest_remote_spec = Gem::SpecFetcher.fetcher.fetch(Gem::Dependency.new(gem, ">#{latest_local_spec.version.version}")).collect { |spec| spec.first }.max { |v1, v2| v1.version <=> v2.version}
+          # Store latest local and remote versions
+          outdated_gems[gem] = [latest_local_spec.version.version, latest_remote_spec.version.version]
+        end
+        # Join the name and versions for each outdated gem. Finally, join all outdated gems to a single string
+        outdated_gems.collect do |gem|
+          "#{gem.first} (#{gem.last.join(' < ')})"
         end.join($/)
       end
 
